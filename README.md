@@ -24,7 +24,7 @@ Some examples are realeased at:
 https://github.com/SUTDNLP/NNSegmentation  
 https://github.com/SUTDNLP/NNPOSTagging  
 https://github.com/SUTDNLP/NNNamedEntity  
-You can see the performances in description.pdf  
+You can see the performances in **description.pdf**  
 https://github.com/SUTDNLP/OpenTargetedSentiment  
 The code of my EMNLP2015 paper:  
 Meishan Zhang; Yue Zhang; Duy Tin Vo. [Neural Networks for Open Domain Targeted Sentiment.](http://www.aclweb.org/anthology/D/D15/D15-1073.pdf) EMNLP2015.  

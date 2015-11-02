@@ -32,7 +32,6 @@ public:
   inline T * c_buf();
   inline void randu(int seed = 0);
 
-
   ~NRVec();
 };
 
@@ -154,11 +153,10 @@ inline T * NRVec<T>::c_buf() {
 }
 
 template<typename T>
-inline void NRVec<T>::randu(int seed){
+inline void NRVec<T>::randu(int seed) {
   srand(seed);
-  for (int i = 0; i < nn; i++)
-  {
-    v[i] = (T)(1.0 *rand() / RAND_MAX);
+  for (int i = 0; i < nn; i++) {
+    v[i] = (T) (1.0 * rand() / RAND_MAX);
   }
 }
 
@@ -215,6 +213,15 @@ public:
       nn--;
       trickleDown(0);
     }
+  }
+
+  void clear() {
+    nn = 0;
+    ne = 0;
+  }
+
+  inline int elemsize(){
+    return ne;
   }
 
 protected:
@@ -346,11 +353,10 @@ inline T * NRHeap<T, compare>::c_buf() {
 }
 
 template<typename T, typename compare>
-inline void NRHeap<T, compare>::randu(int seed){
+inline void NRHeap<T, compare>::randu(int seed) {
   srand(seed);
-  for (int i = 0; i < nn; i++)
-  {
-    v[i] = (T)(1.0 *rand() / RAND_MAX);
+  for (int i = 0; i < nn; i++) {
+    v[i] = (T) (1.0 * rand() / RAND_MAX);
   }
 }
 
@@ -511,11 +517,11 @@ inline int NRMat<T>::total_size() const {
 }
 
 template<typename T>
-inline void NRMat<T>::randu(int seed){
+inline void NRMat<T>::randu(int seed) {
   srand(seed);
   for (int i = 0; i < nn; i++)
     for (int j = 0; j < mm; j++)
-      v[i][j] = (T)(1.0 *rand() / RAND_MAX);
+      v[i][j] = (T) (1.0 * rand() / RAND_MAX);
 }
 
 // ---------------- NRMat3d: matrix (3d) ---------------------
@@ -660,12 +666,12 @@ inline int NRMat3d<T>::total_size() const {
 }
 
 template<typename T>
-inline void NRMat3d<T>::randu(int seed){
+inline void NRMat3d<T>::randu(int seed) {
   srand(seed);
   for (int i = 0; i < nn; i++)
     for (int j = 0; j < mm; j++)
       for (int k = 0; k < kk; k++)
-        v[i][j][k] = (T)(1.0 *rand() / RAND_MAX);
+        v[i][j][k] = (T) (1.0 * rand() / RAND_MAX);
 }
 
 // ---------------- NRMat3d: matrix (4d) ---------------------
@@ -856,13 +862,13 @@ inline int NRMat4d<T>::total_size() const {
 }
 
 template<typename T>
-inline void NRMat4d<T>::randu(int seed){
+inline void NRMat4d<T>::randu(int seed) {
   srand(seed);
   for (int i = 0; i < nn; i++)
     for (int j = 0; j < mm; j++)
       for (int k = 0; k < kk; k++)
         for (int l = 0; l < ll; l++)
-          v[i][j][k][l] = (T)(1.0 *rand() / RAND_MAX);
+          v[i][j][k][l] = (T) (1.0 * rand() / RAND_MAX);
 }
 
 }

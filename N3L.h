@@ -25,8 +25,10 @@
 #include "RecursiveNN.h"
 #include "RecursiveGatedNN.h"
 #include "SparseUniLayer.h"
+#include "SparseUniLayer1O.h"
 #include "TensorLayer.h"
 #include "TriLayer.h"
 #include "UniLayer.h"
+#include "AvgPerceptron1O.h"
 
 #endif

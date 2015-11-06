@@ -379,4 +379,34 @@ inline void softmax_predict(Tensor<xpu, 2, dtype> output, int& result) {
 
 }
 
+template<typename xpu>
+inline int softmax_predict(Tensor<xpu, 2, dtype> output, vector<dtype>& results) {
+  int dim1 = output.size(0), dim2 = output.size(1);
+  if (dim1 != 1) {
+    std::cerr << "softmax_predict error: dim size invalid" << std::endl;
+  }
+
+  int optLabel = -1;
+  for (int i = 0; i < dim2; ++i) {
+    if (optLabel < 0 || output[0][i] > output[0][optLabel])
+      optLabel = i;
+  }
+
+  dtype maxScore = output[0][optLabel];
+  results.resize(dim2);
+
+  dtype sum = 0.0;
+  for (int i = 0; i < dim2; ++i) {
+      results[i] = exp(output[0][i] - maxScore);
+      sum += results[i];
+  }
+
+  for (int i = 0; i < dim2; ++i) {
+      results[i] = results[i]/sum;
+  }
+
+  return optLabel;
+
+}
+
 #endif

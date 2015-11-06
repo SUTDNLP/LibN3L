@@ -1,16 +1,16 @@
 /*
- * RecursiveGatedNN.h
- *
- *  Created on: Mar 18, 2015
+ * AttRecursiveGatedNN.h
+ *  Gated Recursive Neural network structure with attention technique.
+ *  Created on: Nov 5, 2015
  *      Author: mszhang
  */
 
-#ifndef SRC_RecursiveGatedNN_H_
-#define SRC_RecursiveGatedNN_H_
+#ifndef SRC_AttRecursiveGatedNN_H_
+#define SRC_AttRecursiveGatedNN_H_
+
 #include "tensor.h"
 
 #include "BiLayer.h"
-#include "UniLayer.h"
 #include "MyLib.h"
 #include "Utiltensor.h"
 
@@ -19,13 +19,13 @@ using namespace mshadow::expr;
 using namespace mshadow::utils;
 
 template<typename xpu>
-class RecursiveGatedNN {
+class AttRecursiveGatedNN {
 public:
-  UniLayer<xpu> _reset_left;
-  UniLayer<xpu> _reset_right;
-  UniLayer<xpu> _update_left;
-  UniLayer<xpu> _update_right;
-  UniLayer<xpu> _update_tilde;
+  BiLayer<xpu> _reset_left;
+  BiLayer<xpu> _reset_right;
+  BiLayer<xpu> _update_left;
+  BiLayer<xpu> _update_right;
+  BiLayer<xpu> _update_tilde;
   BiLayer<xpu> _recursive_tilde;
 
 
@@ -55,15 +55,15 @@ public:
 
 
 public:
-  RecursiveGatedNN() {
+  AttRecursiveGatedNN() {
   }
 
-  inline void initial(int dimension, int seed = 0) {
-    _reset_left.initial(dimension, dimension, false, seed, 1);
-    _reset_right.initial(dimension, dimension, false, seed + 10, 1);
-    _update_left.initial(dimension, dimension, false, seed + 20, 3);
-    _update_right.initial(dimension, dimension, false, seed + 30, 3);
-    _update_tilde.initial(dimension, dimension, false, seed + 40, 3);
+  inline void initial(int dimension, int attDim, int seed = 0) {
+    _reset_left.initial(dimension, dimension, attDim, false, seed, 1);
+    _reset_right.initial(dimension, dimension, attDim, false, seed + 10, 1);
+    _update_left.initial(dimension, dimension, attDim, false, seed + 20, 3);
+    _update_right.initial(dimension, dimension, attDim, false, seed + 30, 3);
+    _update_tilde.initial(dimension, dimension, attDim, false, seed + 40, 3);
     _recursive_tilde.initial(dimension, dimension, dimension, false, seed + 50, 0);
 
     nxl = NewTensor<xpu>(Shape2(1, dimension), d_zero);
@@ -92,15 +92,18 @@ public:
   }
 
 
-  inline void initial(Tensor<xpu, 2, dtype> rW1, Tensor<xpu, 2, dtype> rW2,
-      Tensor<xpu, 2, dtype> uW1, Tensor<xpu, 2, dtype> uW2, Tensor<xpu, 2, dtype> uW3,
+  inline void initial(Tensor<xpu, 2, dtype> rW1, Tensor<xpu, 2, dtype> rU1,
+      Tensor<xpu, 2, dtype> rW2, Tensor<xpu, 2, dtype> rU2,
+      Tensor<xpu, 2, dtype> uW1, Tensor<xpu, 2, dtype> uU1,
+      Tensor<xpu, 2, dtype> uW2, Tensor<xpu, 2, dtype> uU2,
+      Tensor<xpu, 2, dtype> uW3, Tensor<xpu, 2, dtype> uU3,
       Tensor<xpu, 2, dtype> W1, Tensor<xpu, 2, dtype> W2, Tensor<xpu, 2, dtype> W3,Tensor<xpu, 2, dtype> b) {
-    _reset_left.initial(rW1, 1);
-    _reset_right.initial(rW2, 1);
+    _reset_left.initial(rW1, rU1, 1);
+    _reset_right.initial(rW2, rU2, 1);
 
-    _update_left.initial(uW1, 3);
-    _update_right.initial(uW2, 3);
-    _update_tilde.initial(uW3, 3);
+    _update_left.initial(uW1, uU1, 3);
+    _update_right.initial(uW2, uU2, 3);
+    _update_tilde.initial(uW3, uU3, 3);
 
     _recursive_tilde.initial(W1, W2, W3, b, 0);
   }
@@ -135,7 +138,7 @@ public:
     FreeSpace(&lumy);
   }
 
-  virtual ~RecursiveGatedNN() {
+  virtual ~AttRecursiveGatedNN() {
     // TODO Auto-generated destructor stub
   }
 
@@ -163,7 +166,7 @@ public:
 
 public:
 
-  inline void ComputeForwardScore(Tensor<xpu, 2, dtype> xl, Tensor<xpu, 2, dtype> xr,
+  inline void ComputeForwardScore(Tensor<xpu, 2, dtype> xl, Tensor<xpu, 2, dtype> xr, Tensor<xpu, 2, dtype> a,
       Tensor<xpu, 2, dtype> rxl, Tensor<xpu, 2, dtype> rxr, Tensor<xpu, 2, dtype> my,
       Tensor<xpu, 2, dtype> uxl, Tensor<xpu, 2, dtype> uxr, Tensor<xpu, 2, dtype> umy,
       Tensor<xpu, 2, dtype> y) {
@@ -176,8 +179,8 @@ public:
     pxr = 0.0;
     pmy = 0.0;
 
-    _reset_left.ComputeForwardScore(xl, rxl);
-    _reset_right.ComputeForwardScore(xr, rxr);
+    _reset_left.ComputeForwardScore(xl, a, rxl);
+    _reset_right.ComputeForwardScore(xr, a, rxr);
 
 
     nxl = rxl * xl;
@@ -186,9 +189,9 @@ public:
     _recursive_tilde.ComputeForwardScore(nxl, nxr, my);
 
 
-    _update_left.ComputeForwardScore(xl, uxl);
-    _update_right.ComputeForwardScore(xr, uxr);
-    _update_tilde.ComputeForwardScore(my, umy);
+    _update_left.ComputeForwardScore(xl, a, uxl);
+    _update_right.ComputeForwardScore(xr, a, uxr);
+    _update_tilde.ComputeForwardScore(my, a, umy);
 
     sum = uxl + uxr + umy;
 
@@ -201,14 +204,14 @@ public:
   }
 
   //please allocate the memory outside here
-  inline void ComputeBackwardLoss(Tensor<xpu, 2, dtype> xl, Tensor<xpu, 2, dtype> xr,
+  inline void ComputeBackwardLoss(Tensor<xpu, 2, dtype> xl, Tensor<xpu, 2, dtype> xr, Tensor<xpu, 2, dtype> a,
       Tensor<xpu, 2, dtype> rxl, Tensor<xpu, 2, dtype> rxr, Tensor<xpu, 2, dtype> my,
       Tensor<xpu, 2, dtype> uxl, Tensor<xpu, 2, dtype> uxr, Tensor<xpu, 2, dtype> umy,
       Tensor<xpu, 2, dtype> y, Tensor<xpu, 2, dtype> ly,
-      Tensor<xpu, 2, dtype> lxl, Tensor<xpu, 2, dtype> lxr,
+      Tensor<xpu, 2, dtype> lxl, Tensor<xpu, 2, dtype> lxr, Tensor<xpu, 2, dtype> la,
       bool bclear = false) {
     if (bclear){
-      lxl = 0.0; lxr = 0.0;
+      lxl = 0.0; lxr = 0.0; la = 0.0;
     }
 
     nxl = 0.0;
@@ -269,9 +272,9 @@ public:
     luxr += lsum;
     lumy += lsum;
 
-    _update_left.ComputeBackwardLoss(xl, uxl, luxl, lxl);
-    _update_right.ComputeBackwardLoss(xr, uxr, luxr, lxr);
-    _update_tilde.ComputeBackwardLoss(my, umy, lumy, lmy);
+    _update_left.ComputeBackwardLoss(xl, a, uxl, luxl, lxl, la);
+    _update_right.ComputeBackwardLoss(xr, a, uxr, luxr, lxr, la);
+    _update_tilde.ComputeBackwardLoss(my, a, umy, lumy, lmy, la);
 
     _recursive_tilde.ComputeBackwardLoss(nxl, nxr, my, lmy, lnxl, lnxr);
 
@@ -281,8 +284,8 @@ public:
     lrxr += lnxr * xr;
     lxr += lnxr * rxr;
 
-    _reset_left.ComputeBackwardLoss(xl, rxl, lrxl, lxl);
-    _reset_right.ComputeBackwardLoss(xr, rxr, lrxr, lxr);
+    _reset_left.ComputeBackwardLoss(xl, a, rxl, lrxl, lxl, la);
+    _reset_right.ComputeBackwardLoss(xr, a, rxr, lrxr, lxr, la);
 
   }
 
@@ -311,4 +314,6 @@ public:
 
 };
 
-#endif /* SRC_RecursiveGatedNN_H_ */
+
+
+#endif /* SRC_AttRecursiveGatedNN_H_ */

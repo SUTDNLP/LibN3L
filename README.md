@@ -14,7 +14,7 @@ I suggest use **openblas** since the current version does not support cuda yet, 
 Find it here:  
    https://github.com/xianyi/OpenBLAS  
 Compile and install:  
-make USE_THREAD=0 &ensp;&ensp;&ensp;&ensp;##single thread version, one can used multi-thread version as well.  
+make USE_THREAD=0 &ensp;&ensp;&ensp;&ensp;##single thread version, one can use multi-thread version as well.  
 make   install&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;##default path /opt/OpenBLAS  
 cp  /opt/OpenBLAS/include/*.*  /usr/include/  
 cp  /opt/OpenBLAS/lib/*.*     /usr/lib(64)/  

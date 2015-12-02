@@ -28,3 +28,7 @@ You can see the performances in **description.pdf**
 https://github.com/SUTDNLP/OpenTargetedSentiment  
 The code of my EMNLP2015 paper:  
 Meishan Zhang; Yue Zhang; Duy Tin Vo. [Neural Networks for Open Domain Targeted Sentiment.](http://www.aclweb.org/anthology/D/D15/D15-1073.pdf) EMNLP2015.  
+
+
+**Updates:** 
+2015-12-02:  support model saving and loading

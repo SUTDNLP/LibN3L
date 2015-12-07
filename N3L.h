@@ -1,7 +1,7 @@
 #ifndef CML_ALL
 #define CML_ALL
 
-
+#include "CheckGrad.h"
 #include "MyLib.h"
 #include "Metric.h"
 #include "NRMat.h"

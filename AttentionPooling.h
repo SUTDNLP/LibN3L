@@ -103,10 +103,9 @@ public:
     if (dim1 != odim1 || dim2 != odim2 || dim1 != 1) {
       std::cerr << "AttentionPooling Forward error: dim invalid" << std::endl;
     }
-
+    
     _bi_gates.ComputeForwardScore(x, xAtt, xMExp);
     _uni_gates.ComputeForwardScore(xMExp, xExp);
-
     sumpool_forward(xExp, xSum);
     for (int idx = 0; idx < seq_size; idx++) {
       xPoolIndex[idx] = xExp[idx] / xSum;
@@ -130,12 +129,10 @@ public:
     if (dim1 != odim1 || dim2 != odim2 || dim1 != 1) {
       std::cerr << "AttentionPooling Forward error: dim invalid" << std::endl;
     }
-
     for (int idx = 0; idx < seq_size; idx++) {
       _bi_gates.ComputeForwardScore(x[idx], xAtt, xMExp[idx]);
     }
     _uni_gates.ComputeForwardScore(xMExp, xExp);
-
     sumpool_forward(xExp, xSum);
     for (int idx = 0; idx < seq_size; idx++) {
       xPoolIndex[idx] = xExp[idx] / xSum;

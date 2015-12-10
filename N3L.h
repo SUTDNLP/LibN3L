@@ -30,6 +30,7 @@
 #include "TensorLayer.h"
 #include "TriLayer.h"
 #include "UniLayer.h"
+#include "UniLayer1O.h"
 #include "AvgPerceptron1O.h"
 
 

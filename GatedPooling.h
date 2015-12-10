@@ -191,6 +191,15 @@ public:
     _uni_gates.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _uni_gates.writeModel(outf);
+
+  }
+
+  void loadModel(LStream &inf) {
+    _uni_gates.loadModel(inf);
+  }
+
 };
 
 #endif /* SRC_GatedPooling_H_ */

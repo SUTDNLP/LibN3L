@@ -379,6 +379,42 @@ public:
     if (_bUseB)
       _gradb = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _WL);
+    SaveBinary(outf, _WR);
+    SaveBinary(outf, _b);
+    SaveBinary(outf, _gradWL);
+    SaveBinary(outf, _gradWR);
+    SaveBinary(outf, _gradb);
+    SaveBinary(outf, _eg2WL);
+    SaveBinary(outf, _eg2WR);
+    SaveBinary(outf, _eg2b);
+
+    WriteBinary(outf, _bUseB);
+    WriteBinary(outf, _funcType);
+    // cout << "Bilayer " << _bUseB << _funcType << endl;
+    // cout << "Bilayer value: " << _WR[1][1] << endl;
+
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_WL, false);
+    LoadBinary(inf, &_WR, false);
+    LoadBinary(inf, &_b, false);
+    LoadBinary(inf, &_gradWL, false);
+    LoadBinary(inf, &_gradWR, false);
+    LoadBinary(inf, &_gradb, false);
+    LoadBinary(inf, &_eg2WL, false);
+    LoadBinary(inf, &_eg2WR, false);
+    LoadBinary(inf, &_eg2b, false);
+
+    ReadBinary(inf, _bUseB);
+    ReadBinary(inf, _funcType);
+    // cout << "Bilayer " << _bUseB << _funcType << endl;
+    // cout << "Bilayer value: " << _WR[1][1] << endl;
+  }
+  
 };
 
 #endif /* SRC_BiLayer_H_ */

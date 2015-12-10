@@ -380,6 +380,27 @@ public:
     _rnn.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _rnn_update.writeModel(outf);
+    _rnn_reset.writeModel(outf);
+    _rnn.writeModel(outf);
+    
+    WriteBinary(outf, _left2right);
+
+    SaveBinary(outf, _null);
+    SaveBinary(outf, _nullLoss);
+  }
+
+  void loadModel(LStream &inf) {
+    _rnn_update.loadModel(inf);
+    _rnn_reset.loadModel(inf);
+    _rnn.loadModel(inf);
+
+    ReadBinary(inf, _left2right);
+
+    LoadBinary(inf, &_null, false);
+    LoadBinary(inf, &_nullLoss, false);
+  }
 };
 
 #endif /* SRC_GRNN_H_ */

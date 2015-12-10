@@ -171,6 +171,23 @@ public:
 
     return _sumW[featId];
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _sumW);
+    WriteBinary(outf, _max_update);
+    WriteVector(outf, _last_update);
+
+  }
+  
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_sumW, false);
+    ReadBinary(inf, _max_update);
+    ReadVector(inf, _last_update);
+  }
 };
 
 #endif /* AVGPERCEPTRON1O_H_ */

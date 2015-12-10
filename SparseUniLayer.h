@@ -384,6 +384,39 @@ public:
       _last_update[featId] = _max_update;
     }
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _b);
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _gradb);
+    SaveBinary(outf, _eg2W);
+    SaveBinary(outf, _eg2b);
+    SaveBinary(outf, _ftW);
+
+
+    WriteBinary(outf, _bUseB);
+    WriteBinary(outf, _funcType);
+    WriteBinary(outf, _max_update);
+    WriteVector(outf, _last_update);
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_b, false);
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_gradb, false);
+    LoadBinary(inf, &_eg2W, false);
+    LoadBinary(inf, &_eg2b, false);
+    LoadBinary(inf, &_ftW, false);
+
+    ReadBinary(inf, _bUseB);
+    ReadBinary(inf, _funcType);
+    ReadBinary(inf, _max_update);
+    ReadVector(inf, _last_update);
+  }
+
+
 };
 
 #endif /* SRC_SparseUniLayer_H_ */

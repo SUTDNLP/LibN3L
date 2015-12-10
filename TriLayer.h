@@ -397,6 +397,53 @@ public:
     if (_bUseB)
       _gradb = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W1);
+    SaveBinary(outf, _W2);
+    SaveBinary(outf, _W3);
+    SaveBinary(outf, _b);
+
+    SaveBinary(outf, _gradW1);
+    SaveBinary(outf, _gradW2);
+    SaveBinary(outf, _gradW3);
+    SaveBinary(outf, _gradb);
+
+    SaveBinary(outf, _eg2W1);
+    SaveBinary(outf, _eg2W2);
+    SaveBinary(outf, _eg2W3);
+    SaveBinary(outf, _eg2b);
+
+    WriteBinary(outf, _bUseB);
+    WriteBinary(outf, _funcType);
+    // cout << "TrilayerLSTM " << _bUseB << _funcType << endl;
+    // cout << "TrilayerLSTM value: " << _W3.size(0) << " and " << _W3.size(1) << " value " << _W3[0][1] << endl;
+
+
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W1, false);
+    LoadBinary(inf, &_W2, false);
+    LoadBinary(inf, &_W3, false);
+    LoadBinary(inf, &_b, false);
+
+    LoadBinary(inf, &_gradW1, false);
+    LoadBinary(inf, &_gradW2, false);
+    LoadBinary(inf, &_gradW3, false);
+    LoadBinary(inf, &_gradb, false);
+
+    LoadBinary(inf, &_eg2W1, false);
+    LoadBinary(inf, &_eg2W2, false);
+    LoadBinary(inf, &_eg2W3, false);
+    LoadBinary(inf, &_eg2b, false);
+
+    ReadBinary(inf, _bUseB);
+    ReadBinary(inf, _funcType);
+    // cout << "TrilayerLSTM " << _bUseB << _funcType << endl;
+    // cout << "TrilayerLSTM value: " << _W3.size(0) << " and " << _W3.size(1) << " value " << _W3[0][1]  << endl;
+  }
+  
 };
 
 #endif /* SRC_TriLayer_H_ */

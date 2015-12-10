@@ -31,6 +31,7 @@
 #include "TriLayer.h"
 #include "UniLayer.h"
 #include "AvgPerceptron1O.h"
+#include "N3Lio.h"
 
 
 #endif

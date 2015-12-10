@@ -309,6 +309,77 @@ public:
     _recursive_tilde.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+
+  void writeModel(LStream &outf) {
+
+    _reset_left.writeModel(outf);
+    _reset_right.writeModel(outf);
+    _update_left.writeModel(outf);
+    _update_right.writeModel(outf);
+    _update_tilde.writeModel(outf);
+    _recursive_tilde.writeModel(outf);
+    
+    SaveBinary(outf, nxl);
+    SaveBinary(outf, nxr);
+    SaveBinary(outf, sum);
+
+    SaveBinary(outf, pxl);
+    SaveBinary(outf, pxr);
+    SaveBinary(outf, pmy);
+
+    SaveBinary(outf, lrxl);
+    SaveBinary(outf, lrxr);
+    SaveBinary(outf, lmy);
+    SaveBinary(outf, luxl);
+    SaveBinary(outf, luxr);
+    SaveBinary(outf, lumy);
+
+    SaveBinary(outf, lnxl);
+    SaveBinary(outf, lnxr);
+    SaveBinary(outf, lsum);
+
+    SaveBinary(outf, lpxl);
+    SaveBinary(outf, lpxr);
+    SaveBinary(outf, lpmy);
+
+  }
+
+  void loadModel(LStream &inf) {
+
+    _reset_left.loadModel(inf);
+    _reset_right.loadModel(inf);
+    _update_left.loadModel(inf);
+    _update_right.loadModel(inf);
+    _update_tilde.loadModel(inf);
+    _recursive_tilde.loadModel(inf);
+
+
+    LoadBinary(inf, &nxl, false);
+    LoadBinary(inf, &nxr, false);
+    LoadBinary(inf, &sum, false);
+
+    LoadBinary(inf, &pxl, false);
+    LoadBinary(inf, &pxr, false);
+    LoadBinary(inf, &pmy, false);
+
+    LoadBinary(inf, &lrxl, false);
+    LoadBinary(inf, &lrxr, false);
+    LoadBinary(inf, &lmy, false);
+    LoadBinary(inf, &luxl, false);
+    LoadBinary(inf, &luxr, false);
+    LoadBinary(inf, &lumy, false);
+
+    LoadBinary(inf, &lnxl, false);
+    LoadBinary(inf, &lnxr, false);
+    LoadBinary(inf, &lsum, false);
+
+    LoadBinary(inf, &lpxl, false);
+    LoadBinary(inf, &lpxr, false);
+    LoadBinary(inf, &lpmy, false);
+
+  }
+
+
 };
 
 #endif /* SRC_RecursiveGatedNN_H_ */

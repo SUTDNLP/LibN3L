@@ -28,7 +28,7 @@ Examples:
 Some examples are realeased at:  
 https://github.com/SUTDNLP/NNSegmentation  
 https://github.com/SUTDNLP/NNPOSTagging  
-https://github.com/SUTDNLP/NNNamedEntity (support model save/load module in dev-load branch)  
+https://github.com/SUTDNLP/NNNamedEntity (already support model save/load module)  
 You can see the performances in **[description.pdf](description(expect for lrec2016).pdf)**  
 https://github.com/SUTDNLP/OpenTargetedSentiment  
 

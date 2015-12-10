@@ -1,15 +1,15 @@
 /*!
- * \file N3Lio.h
+ * \file IO.h
  * \brief definitions of I/O functions for LibN3L
  * \author Jie
  */
-#ifndef LIBN3L_N3LIO_H_
-#define LIBN3L_N3LIO_H_
+#ifndef LIBN3L_IO_H_
+#define LIBN3L_IO_H_
  #include <stdio.h>
 #include "tensor.h"
 #include "io.h"
 #include "Utiltensor.h"
-#include "utils.h"
+#include "Utils.h"
 
 
 class LStream : public IStream {
@@ -193,4 +193,4 @@ inline void ReadVector(TStream &fo, NRVec<DType> &target) {
 
 
 
-#endif  // LIBN3L_N3LIO_H_
+#endif  // LIBN3L_IO_H_

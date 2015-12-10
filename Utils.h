@@ -1,6 +1,6 @@
 /*!
  *  Copyright (c) 2014 by Contributors
- * \file utils.h
+ * \file Utils.h
  * \brief simple utils for error and checkings
  * \author Tianqi Chen
  */

@@ -124,6 +124,19 @@ public:
   inline void clearGrad() {
     _gradW = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _eg2W);
+
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_eg2W, false);
+  }
 };
 
 #endif /* SRC_UniLayer1O_H_ */

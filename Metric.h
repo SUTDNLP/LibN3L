@@ -7,7 +7,7 @@
 
 #ifndef SRC_METRIC_H_
 #define SRC_METRIC_H_
-#include "N3Lio.h"
+#include "IO.h"
 
 using namespace std;
 

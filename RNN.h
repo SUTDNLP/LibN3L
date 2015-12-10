@@ -233,6 +233,23 @@ public:
     _rnn.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _rnn.writeModel(outf);
+
+    SaveBinary(outf, _null);
+    SaveBinary(outf, _nullLoss);
+
+    WriteBinary(outf, _left2right);
+  }
+
+  void loadModel(LStream &inf) {
+    _rnn.loadModel(inf);
+    LoadBinary(inf, &_null, false);
+    LoadBinary(inf, &_nullLoss, false);
+
+    ReadBinary(inf, _left2right);
+  }
+
 };
 
 #endif /* SRC_RNN_H_ */

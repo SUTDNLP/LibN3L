@@ -3,7 +3,7 @@
 
 #include "MyLib.h"
 #include "Hash_map.hpp"
-
+#include "N3Lio.h"
 
 /*
 	This class serializes feature from string to int.
@@ -156,6 +156,39 @@ public:
     }
   }
 
+
+  void loadModel(LStream &inf)
+  { 
+    clear();
+    string tmp_string;
+    int ID;
+    ReadBinary(inf, m_size);
+    ReadBinary(inf, m_b_fixed);
+    for (int i=0; i<m_size; i++)
+    { 
+      ReadString(inf, tmp_string);
+      ReadBinary(inf, ID);
+      m_string_to_id[tmp_string] = i;
+      m_id_to_string.push_back(tmp_string);
+      // cout << tmp_string << " is " << ID << " and " << i << std::endl;
+      // cout << m_id_to_string[i] << " is " << ID << " and " << i << std::endl;
+      assert(ID == i);
+    }
+
+  }
+
+  void writeModel(LStream &outf) const
+  { 
+    WriteBinary(outf, m_size);
+    WriteBinary(outf, m_b_fixed);
+    for (int i=0; i<m_size; i++)
+    { 
+      // cout << m_id_to_string[i] << " is " << i << std::endl;
+      WriteString(outf, m_id_to_string[i]);
+      WriteBinary(outf, i);
+    }
+  }
+  
 };
 
 typedef basic_quark Alphabet;

@@ -81,6 +81,14 @@ public:
     _rnn.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _rnn.writeModel(outf);
+  }
+
+  void loadModel(LStream &inf) {
+    _rnn.loadModel(inf);
+  }
+
 };
 
 #endif /* SRC_RecursiveNN_H_ */

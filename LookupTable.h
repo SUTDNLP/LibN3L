@@ -186,8 +186,34 @@ public:
       _E[wordId] = _E[wordId] * F<nl_exp>(times * F<nl_log>(_ftE[wordId]));
       _last_update[wordId] = _max_update;
     }
-
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _E);
+    SaveBinary(outf, _gradE);
+    SaveBinary(outf, _eg2E);
+    SaveBinary(outf, _ftE);
+
+    WriteBinary(outf, _bFineTune);
+    WriteBinary(outf, _nDim);
+    WriteBinary(outf, _nVSize);
+    WriteBinary(outf, _max_update);
+    WriteVector(outf, _last_update);
+  }
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_E, false);
+    LoadBinary(inf, &_gradE, false);
+    LoadBinary(inf, &_eg2E, false);
+    LoadBinary(inf, &_ftE, false);  
+
+    ReadBinary(inf, _bFineTune);
+    ReadBinary(inf, _nDim);
+    ReadBinary(inf, _nVSize);
+    ReadBinary(inf, _max_update);
+
+    ReadVector(inf, _last_update);
+  }
+
 };
 
 #endif /* SRC_LookupTable_H_ */

@@ -1,7 +1,10 @@
-#####LibN3L: A light-weight neural network package for natural language.
+LibN3L: A light-weight neural network package for natural language.
+======
 
 Just include the directory in your code and call it by "#include N3L.h" 
 
+Installation:
+====
 Prerequisition:  
 &ensp;&ensp;&ensp;&ensp;***mshadow***  
 Please download and include the directory  "https://github.com/dmlc/mshadow/tree/master/mshadow" in your applications:  
@@ -20,11 +23,20 @@ cp  /opt/OpenBLAS/include/*.*  /usr/include/
 cp  /opt/OpenBLAS/lib/*.*     /usr/lib(64)/  
 
 
+Examples:
+====
 Some examples are realeased at:  
 https://github.com/SUTDNLP/NNSegmentation  
 https://github.com/SUTDNLP/NNPOSTagging  
-https://github.com/SUTDNLP/NNNamedEntity  
-You can see the performances in **description.pdf**  
+https://github.com/SUTDNLP/NNNamedEntity (support model save/load model in dev-load branch)  
+You can see the performances in **[description.pdf](description(expect for lrec2016).pdf)**  
 https://github.com/SUTDNLP/OpenTargetedSentiment  
+
+Cite:
+====
 The code of my EMNLP2015 paper:  
 Meishan Zhang; Yue Zhang; Duy Tin Vo. [Neural Networks for Open Domain Targeted Sentiment.](http://www.aclweb.org/anthology/D/D15/D15-1073.pdf) EMNLP2015.  
+
+Updating...
+====
+* 2015-12-10: support model saving and loading.

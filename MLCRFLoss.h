@@ -824,6 +824,19 @@ public:
   inline void clearGrad() {
     _grad_tagBigram = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _tagBigram);
+    SaveBinary(outf, _grad_tagBigram);
+    SaveBinary(outf, _eg2_tagBigram);
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_tagBigram, false);
+    LoadBinary(inf, &_grad_tagBigram, false);
+    LoadBinary(inf, &_eg2_tagBigram, false);
+  }
+
 };
 
 #endif /* SRC_MLCRFLoss_H_ */

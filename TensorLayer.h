@@ -447,6 +447,41 @@ public:
     if (_mode >= 3)
       _gradb = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _V);
+    SaveBinary(outf, _b);
+
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _gradV);
+    SaveBinary(outf, _gradb);
+
+    SaveBinary(outf, _eg2W);
+    SaveBinary(outf, _eg2V);
+    SaveBinary(outf, _eg2b);
+
+    WriteBinary(outf, _mode);
+    WriteBinary(outf, _funcType);
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_V, false);
+    LoadBinary(inf, &_b, false);
+
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_gradV, false);
+    LoadBinary(inf, &_gradb, false);
+
+    LoadBinary(inf, &_eg2W, false);
+    LoadBinary(inf, &_eg2V, false);
+    LoadBinary(inf, &_eg2b, false);
+
+    ReadBinary(inf, _mode);
+    ReadBinary(inf, _funcType);
+  }
+
 };
 
 #endif /* SRC_TensorLayer_H_ */

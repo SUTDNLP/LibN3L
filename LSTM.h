@@ -523,6 +523,34 @@ public:
     _lstm_cell.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _lstm_output.writeModel(outf);
+    _lstm_input.writeModel(outf);
+    _lstm_forget.writeModel(outf);
+    _lstm_cell.writeModel(outf);
+    
+    WriteBinary(outf, _left2right);
+
+    SaveBinary(outf, _null1);
+    SaveBinary(outf, _null1Loss);
+    SaveBinary(outf, _null2);
+    SaveBinary(outf, _null2Loss);
+  }
+
+  void loadModel(LStream &inf) {
+    _lstm_output.loadModel(inf);
+    _lstm_input.loadModel(inf);
+    _lstm_forget.loadModel(inf);
+    _lstm_cell.loadModel(inf);
+
+    ReadBinary(inf, _left2right);
+
+    LoadBinary(inf, &_null1, false);
+    LoadBinary(inf, &_null1Loss, false);
+    LoadBinary(inf, &_null2, false);
+    LoadBinary(inf, &_null2Loss, false);
+  }
+
 };
 
 #endif /* SRC_LSTM_H_ */

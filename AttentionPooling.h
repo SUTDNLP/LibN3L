@@ -362,6 +362,17 @@ public:
     _uni_gates.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
+  void writeModel(LStream &outf) {
+    _bi_gates.writeModel(outf);
+    _uni_gates.writeModel(outf);
+
+  }
+
+  void loadModel(LStream &inf) {
+    _bi_gates.loadModel(inf);
+    _uni_gates.loadModel(inf);
+
+  }
 };
 
 #endif /* SRC_AttentionPooling_H_ */

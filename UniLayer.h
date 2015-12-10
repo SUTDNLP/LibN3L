@@ -326,6 +326,32 @@ public:
     if (_bUseB)
       _gradb = 0;
   }
+
+  void writeModel(LStream &outf) {
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _b);
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _gradb);
+    SaveBinary(outf, _eg2W);
+    SaveBinary(outf, _eg2b);
+    WriteBinary(outf, _bUseB);
+    WriteBinary(outf, _funcType);
+    // cout << "Unilayer " << _bUseB << _funcType << endl;
+
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_b, false);
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_gradb, false);
+    LoadBinary(inf, &_eg2W, false);
+    LoadBinary(inf, &_eg2b, false);
+    ReadBinary(inf, _bUseB);
+    ReadBinary(inf, _funcType);
+    // cout << "Unilayer " << _bUseB << _funcType << endl;
+  }
+  
 };
 
 #endif /* SRC_UniLayer_H_ */

@@ -7,7 +7,7 @@
 
 #ifndef SRC_METRIC_H_
 #define SRC_METRIC_H_
-
+#include "N3Lio.h"
 
 using namespace std;
 
@@ -83,7 +83,19 @@ public:
     }
   }
 
+  void loadModel(LStream &inf) {
+    ReadBinary(inf, overall_label_count);
+    ReadBinary(inf, correct_label_count);
+    ReadBinary(inf, predicated_label_count);
+    // cout << overall_label_count << correct_label_count << predicated_label_count <<endl;
 
+  }
+  void writeModel(LStream &outf) {
+    WriteBinary(outf, overall_label_count);
+    WriteBinary(outf, correct_label_count);
+    WriteBinary(outf, predicated_label_count);
+    // cout << overall_label_count << correct_label_count << predicated_label_count <<endl;
+  }
 };
 
 #endif /* SRC_EXAMPLE_H_ */

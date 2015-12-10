@@ -188,6 +188,29 @@ public:
       _last_update[featId] = _max_update;
     }
   }
+
+
+  void writeModel(LStream &outf) {
+
+    SaveBinary(outf, _W);
+    SaveBinary(outf, _gradW);
+    SaveBinary(outf, _eg2W);
+    SaveBinary(outf, _ftW);
+
+    WriteBinary(outf, _max_update);
+    WriteVector(outf, _last_update);
+  }
+
+  void loadModel(LStream &inf) {
+    LoadBinary(inf, &_W, false);
+    LoadBinary(inf, &_gradW, false);
+    LoadBinary(inf, &_eg2W, false);
+    LoadBinary(inf, &_ftW, false);
+
+    ReadBinary(inf, _max_update);
+    ReadVector(inf, _last_update);
+  }
+
 };
 
 

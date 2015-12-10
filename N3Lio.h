@@ -1,8 +1,7 @@
 /*!
- *  Copyright (c) 2014 by Contributors
- * \file io.h
- * \brief definitions of I/O functions for mshadow tensor
- * \author Tianqi Chen
+ * \file N3Lio.h
+ * \brief definitions of I/O functions for LibN3L
+ * \author Jie
  */
 #ifndef LIBN3L_N3LIO_H_
 #define LIBN3L_N3LIO_H_
@@ -10,6 +9,7 @@
 #include "tensor.h"
 #include "io.h"
 #include "Utiltensor.h"
+#include "utils.h"
 
 
 class LStream : public IStream {

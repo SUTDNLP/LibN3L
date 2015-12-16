@@ -76,7 +76,7 @@ public:
   }
 
 public:
-  inline void ComputeForwardScore(Tensor<xpu, 2, dtype> x, dtype y) {
+  inline void ComputeForwardScore(Tensor<xpu, 2, dtype> x, dtype& y) {
     static int nISize;
     nISize = _W.size(1);
     y = 0.0;
@@ -87,7 +87,7 @@ public:
 
 
   //please allocate the memory outside here
-  inline void ComputeBackwardLoss(Tensor<xpu, 2, dtype> x, dtype y, dtype ly, Tensor<xpu, 2, dtype> lx, bool bclear = false) {
+  inline void ComputeBackwardLoss(Tensor<xpu, 2, dtype> x, dtype ly, Tensor<xpu, 2, dtype> lx, bool bclear = false) {
     //_gradW
     _gradW += ly * x;
 

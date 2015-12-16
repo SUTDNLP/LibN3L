@@ -189,7 +189,8 @@ public:
   bool add_elem(const T &a) {
     if (ne == maxsize) {
       if (compare()(v[0], a) < 0) {
-        T tmp = v[0];
+        //T tmp;
+				//tmp = v[0];
         v[0] = a;
         trickleDown(0);
         return true;
@@ -235,7 +236,8 @@ protected:
     return (i - 1) / 2;
   }
   inline void swap(int i, int j) {
-    T tmp = v[i];
+    static T tmp;
+  	tmp = v[i];
     v[i] = v[j];
     v[j] = tmp;
   }

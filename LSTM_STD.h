@@ -1,18 +1,18 @@
 /*
- * LSTM.h
+ * LSTM_STD.h
  *
  *  Created on: Mar 18, 2015
  *      Author: mszhang
  */
 
-#ifndef SRC_LSTM_H_
-#define SRC_LSTM_H_
+#ifndef SRC_LSTM_STD_H_
+#define SRC_LSTM_STD_H_
 #include "tensor.h"
 
 #include "BiLayer.h"
 #include "MyLib.h"
 #include "Utiltensor.h"
-#include "TriLayerLSTM.h"
+#include "TriLayer.h"
 
 using namespace mshadow;
 using namespace mshadow::expr;
@@ -20,26 +20,26 @@ using namespace mshadow::utils;
 
 
 template<typename xpu>
-class LSTM {
+class LSTM_STD {
 public:
-  TriLayerLSTM<xpu> _lstm_output;
-  TriLayerLSTM<xpu> _lstm_input;
-  TriLayerLSTM<xpu> _lstm_forget;
+  TriLayer<xpu> _lstm_output;
+  TriLayer<xpu> _lstm_input;
+  TriLayer<xpu> _lstm_forget;
   BiLayer<xpu> _lstm_cell;
   bool _left2right;
 
   Tensor<xpu, 2, dtype> _null1, _null1Loss, _null2, _null2Loss;
 
 public:
-  LSTM() {
+  LSTM_STD() {
   }
 
   inline void initial(int outputsize, int inputsize, int seed = 0) {
     _left2right = true;
 
-    _lstm_output.initial(outputsize, outputsize, inputsize, true, seed, 1);
-    _lstm_input.initial(outputsize, outputsize, inputsize, true, seed + 10, 1);
-    _lstm_forget.initial(outputsize, outputsize, inputsize, true, seed + 20, 1);
+    _lstm_output.initial(outputsize, outputsize, inputsize, outputsize, true, seed, 1);
+    _lstm_input.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 10, 1);
+    _lstm_forget.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 20, 1);
     _lstm_cell.initial(outputsize, outputsize, inputsize, true, seed + 30, 0);
 
     _null1 = NewTensor<xpu>(Shape2(1, outputsize), d_zero);
@@ -52,9 +52,9 @@ public:
   inline void initial(int outputsize, int inputsize, bool left2right, int seed = 0) {
     _left2right = left2right;
 
-    _lstm_output.initial(outputsize, outputsize, inputsize, true, seed, 1);
-    _lstm_input.initial(outputsize, outputsize, inputsize, true, seed + 10, 1);
-    _lstm_forget.initial(outputsize, outputsize, inputsize, true, seed + 20, 1);
+    _lstm_output.initial(outputsize, outputsize, inputsize, outputsize, true, seed, 1);
+    _lstm_input.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 10, 1);
+    _lstm_forget.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 20, 1);
     _lstm_cell.initial(outputsize, outputsize, inputsize, true, seed + 30, 0);
 
     _null1 = NewTensor<xpu>(Shape2(1, outputsize), d_zero);
@@ -71,7 +71,7 @@ public:
     _left2right = left2right;
 
     _lstm_output.initial(oW1, oW2, oW3, ob, true, 1);
-    _lstm_input.initial(iW1, iW2, iW3, ib, true, 1);
+    _lstm_input.initial(iW1, iW2, iW3, ib, true), 1;
     _lstm_forget.initial(fW1, fW2, fW3, fb, true, 1);
     _lstm_cell.initial(cWL, cWR, cb, true);
 
@@ -93,7 +93,7 @@ public:
     FreeSpace(&_null2Loss);
   }
 
-  virtual ~LSTM() {
+  virtual ~LSTM_STD() {
     // TODO Auto-generated destructor stub
   }
 
@@ -553,4 +553,4 @@ public:
 
 };
 
-#endif /* SRC_LSTM_H_ */
+#endif /* SRC_LSTM_STD_H_ */

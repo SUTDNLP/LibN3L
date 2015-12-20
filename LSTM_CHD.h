@@ -1,18 +1,18 @@
 /*
- * LSTM.h
+ * LSTM_CHD.h
  *
  *  Created on: Mar 18, 2015
  *      Author: mszhang
  */
 
-#ifndef SRC_LSTM_H_
-#define SRC_LSTM_H_
+#ifndef SRC_LSTM_CHD_H_
+#define SRC_LSTM_CHD_H_
 #include "tensor.h"
 
 #include "BiLayer.h"
 #include "MyLib.h"
 #include "Utiltensor.h"
-#include "TriLayerLSTM.h"
+#include "TriLayer.h"
 
 using namespace mshadow;
 using namespace mshadow::expr;
@@ -20,26 +20,24 @@ using namespace mshadow::utils;
 
 
 template<typename xpu>
-class LSTM {
+class LSTM_CHD {
 public:
-  TriLayerLSTM<xpu> _lstm_output;
-  TriLayerLSTM<xpu> _lstm_input;
-  TriLayerLSTM<xpu> _lstm_forget;
+  TriLayer<xpu> _lstm_output;
+  TriLayer<xpu> _lstm_input;
   BiLayer<xpu> _lstm_cell;
   bool _left2right;
 
   Tensor<xpu, 2, dtype> _null1, _null1Loss, _null2, _null2Loss;
 
 public:
-  LSTM() {
+  LSTM_CHD() {
   }
 
   inline void initial(int outputsize, int inputsize, int seed = 0) {
     _left2right = true;
 
-    _lstm_output.initial(outputsize, outputsize, inputsize, true, seed, 1);
-    _lstm_input.initial(outputsize, outputsize, inputsize, true, seed + 10, 1);
-    _lstm_forget.initial(outputsize, outputsize, inputsize, true, seed + 20, 1);
+    _lstm_output.initial(outputsize, outputsize, inputsize, outputsize, true, seed, 1);
+    _lstm_input.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 10, 1);
     _lstm_cell.initial(outputsize, outputsize, inputsize, true, seed + 30, 0);
 
     _null1 = NewTensor<xpu>(Shape2(1, outputsize), d_zero);
@@ -52,9 +50,8 @@ public:
   inline void initial(int outputsize, int inputsize, bool left2right, int seed = 0) {
     _left2right = left2right;
 
-    _lstm_output.initial(outputsize, outputsize, inputsize, true, seed, 1);
-    _lstm_input.initial(outputsize, outputsize, inputsize, true, seed + 10, 1);
-    _lstm_forget.initial(outputsize, outputsize, inputsize, true, seed + 20, 1);
+    _lstm_output.initial(outputsize, outputsize, inputsize, outputsize, true, seed, 1);
+    _lstm_input.initial(outputsize, outputsize, inputsize, outputsize, true, seed + 10, 1);
     _lstm_cell.initial(outputsize, outputsize, inputsize, true, seed + 30, 0);
 
     _null1 = NewTensor<xpu>(Shape2(1, outputsize), d_zero);
@@ -66,13 +63,11 @@ public:
 
   inline void initial(Tensor<xpu, 2, dtype> cWL, Tensor<xpu, 2, dtype> cWR, Tensor<xpu, 2, dtype> cb, Tensor<xpu, 2, dtype> oW1, Tensor<xpu, 2, dtype> oW2,
       Tensor<xpu, 2, dtype> oW3, Tensor<xpu, 2, dtype> ob, Tensor<xpu, 2, dtype> iW1, Tensor<xpu, 2, dtype> iW2, Tensor<xpu, 2, dtype> iW3,
-      Tensor<xpu, 2, dtype> ib, Tensor<xpu, 2, dtype> fW1, Tensor<xpu, 2, dtype> fW2, Tensor<xpu, 2, dtype> fW3, Tensor<xpu, 2, dtype> fb, bool left2right =
-          true) {
+      Tensor<xpu, 2, dtype> ib, bool left2right = true) {
     _left2right = left2right;
 
     _lstm_output.initial(oW1, oW2, oW3, ob, true, 1);
     _lstm_input.initial(iW1, iW2, iW3, ib, true, 1);
-    _lstm_forget.initial(fW1, fW2, fW3, fb, true, 1);
     _lstm_cell.initial(cWL, cWR, cb, true);
 
     _null1 = NewTensor<xpu>(Shape2(1, ob.size(1)), d_zero);
@@ -84,7 +79,6 @@ public:
   inline void release() {
     _lstm_output.release();
     _lstm_input.release();
-    _lstm_forget.release();
     _lstm_cell.release();
 
     FreeSpace(&_null1);
@@ -93,14 +87,13 @@ public:
     FreeSpace(&_null2Loss);
   }
 
-  virtual ~LSTM() {
+  virtual ~LSTM_CHD() {
     // TODO Auto-generated destructor stub
   }
 
   inline dtype squarenormAll() {
     dtype norm = _lstm_output.squarenormAll();
     norm += _lstm_input.squarenormAll();
-    norm += _lstm_forget.squarenormAll();
     norm += _lstm_cell.squarenormAll();
 
     return norm;
@@ -109,7 +102,6 @@ public:
   inline void scaleGrad(dtype scale) {
     _lstm_output.scaleGrad(scale);
     _lstm_input.scaleGrad(scale);
-    _lstm_forget.scaleGrad(scale);
     _lstm_cell.scaleGrad(scale);
   }
 
@@ -139,7 +131,7 @@ public:
           y[idx] = my[idx] * oy[idx];
         } else {
           _lstm_input.ComputeForwardScore(y[idx - 1], x[idx], cy[idx - 1], iy[idx]);
-          _lstm_forget.ComputeForwardScore(y[idx - 1], x[idx], cy[idx - 1], fy[idx]);
+          fy[idx] = 1 - iy[idx];
           _lstm_cell.ComputeForwardScore(y[idx - 1], x[idx], mcy[idx]);
           cy[idx] = mcy[idx] * iy[idx] + cy[idx - 1] * fy[idx];
           _lstm_output.ComputeForwardScore(y[idx - 1], x[idx], cy[idx], oy[idx]);
@@ -158,7 +150,7 @@ public:
           y[idx] = my[idx] * oy[idx];
         } else {
           _lstm_input.ComputeForwardScore(y[idx + 1], x[idx], cy[idx + 1], iy[idx]);
-          _lstm_forget.ComputeForwardScore(y[idx + 1], x[idx], cy[idx + 1], fy[idx]);
+          fy[idx] = 1 - iy[idx];
           _lstm_cell.ComputeForwardScore(y[idx + 1], x[idx], mcy[idx]);
           cy[idx] = mcy[idx] * iy[idx] + cy[idx + 1] * fy[idx];
           _lstm_output.ComputeForwardScore(y[idx + 1], x[idx], cy[idx], oy[idx]);
@@ -194,7 +186,7 @@ public:
           y[idx] = my[idx] * oy[idx];
         } else {
           _lstm_input.ComputeForwardScore(y[idx - 1], x[idx], cy[idx - 1], iy[idx]);
-          _lstm_forget.ComputeForwardScore(y[idx - 1], x[idx], cy[idx - 1], fy[idx]);
+          fy[idx] = 1 - iy[idx];
           _lstm_cell.ComputeForwardScore(y[idx - 1], x[idx], mcy[idx]);
           cy[idx] = mcy[idx] * iy[idx] + cy[idx - 1] * fy[idx];
           _lstm_output.ComputeForwardScore(y[idx - 1], x[idx], cy[idx], oy[idx]);
@@ -213,7 +205,7 @@ public:
           y[idx] = my[idx] * oy[idx];
         } else {
           _lstm_input.ComputeForwardScore(y[idx + 1], x[idx], cy[idx + 1], iy[idx]);
-          _lstm_forget.ComputeForwardScore(y[idx + 1], x[idx], cy[idx + 1], fy[idx]);
+          fy[idx] = 1 - iy[idx];
           _lstm_cell.ComputeForwardScore(y[idx + 1], x[idx], mcy[idx]);
           cy[idx] = mcy[idx] * iy[idx] + cy[idx + 1] * fy[idx];
           _lstm_output.ComputeForwardScore(y[idx + 1], x[idx], cy[idx], oy[idx]);
@@ -249,7 +241,7 @@ public:
       Tensor<xpu, 2, dtype> mcy, Tensor<xpu, 2, dtype> cy, Tensor<xpu, 2, dtype> my, Tensor<xpu, 2, dtype> y) {
     assert(_left2right);
     _lstm_input.ComputeForwardScore(py, x, pcy, iy);
-    _lstm_forget.ComputeForwardScore(py, x, pcy, fy);
+    fy = 1 - iy;
     _lstm_cell.ComputeForwardScore(py, x, mcy);
     cy = mcy * iy + pcy * fy;
     _lstm_output.ComputeForwardScore(py, x, cy, oy);
@@ -316,8 +308,7 @@ public:
           _lstm_cell.ComputeBackwardLoss(y[idx - 1], x[idx], mcy[idx],
               lmcy[idx], lFy[idx - 1], lx[idx]);
 
-          _lstm_forget.ComputeBackwardLoss(y[idx - 1], x[idx], cy[idx - 1],
-              fy[idx], lfy[idx], lFy[idx - 1], lx[idx], lFcy[idx - 1]);
+          liy[idx] -= lfy[idx];
 
           _lstm_input.ComputeBackwardLoss(y[idx - 1], x[idx], cy[idx - 1],
               iy[idx], liy[idx], lFy[idx - 1], lx[idx], lFcy[idx - 1]);
@@ -361,8 +352,7 @@ public:
           _lstm_cell.ComputeBackwardLoss(y[idx + 1], x[idx], mcy[idx],
               lmcy[idx], lFy[idx + 1], lx[idx]);
 
-          _lstm_forget.ComputeBackwardLoss(y[idx + 1], x[idx], cy[idx + 1],
-              fy[idx], lfy[idx], lFy[idx + 1], lx[idx], lFcy[idx + 1]);
+          liy[idx] -= lfy[idx];
 
           _lstm_input.ComputeBackwardLoss(y[idx + 1], x[idx], cy[idx + 1],
               iy[idx], liy[idx], lFy[idx + 1], lx[idx], lFcy[idx + 1]);
@@ -442,8 +432,7 @@ public:
           _lstm_cell.ComputeBackwardLoss(y[idx - 1], x[idx], mcy[idx],
               lmcy[idx], lFy[idx - 1], lx[idx]);
 
-          _lstm_forget.ComputeBackwardLoss(y[idx - 1], x[idx], cy[idx - 1],
-              fy[idx], lfy[idx], lFy[idx - 1], lx[idx], lFcy[idx - 1]);
+          liy[idx] -= lfy[idx];
 
           _lstm_input.ComputeBackwardLoss(y[idx - 1], x[idx], cy[idx - 1],
               iy[idx], liy[idx], lFy[idx - 1], lx[idx], lFcy[idx - 1]);
@@ -487,8 +476,7 @@ public:
           _lstm_cell.ComputeBackwardLoss(y[idx + 1], x[idx], mcy[idx],
               lmcy[idx], lFy[idx + 1], lx[idx]);
 
-          _lstm_forget.ComputeBackwardLoss(y[idx + 1], x[idx], cy[idx + 1],
-              fy[idx], lfy[idx], lFy[idx + 1], lx[idx], lFcy[idx + 1]);
+          liy[idx] -= lfy[idx];
 
           _lstm_input.ComputeBackwardLoss(y[idx + 1], x[idx], cy[idx + 1],
               iy[idx], liy[idx], lFy[idx + 1], lx[idx], lFcy[idx + 1]);
@@ -512,21 +500,18 @@ public:
   inline void randomprint(int num) {
     _lstm_output.randomprint(num);
     _lstm_input.randomprint(num);
-    _lstm_forget.randomprint(num);
     _lstm_cell.randomprint(num);
   }
 
   inline void updateAdaGrad(dtype regularizationWeight, dtype adaAlpha, dtype adaEps) {
     _lstm_output.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
     _lstm_input.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
-    _lstm_forget.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
     _lstm_cell.updateAdaGrad(regularizationWeight, adaAlpha, adaEps);
   }
 
   void writeModel(LStream &outf) {
     _lstm_output.writeModel(outf);
     _lstm_input.writeModel(outf);
-    _lstm_forget.writeModel(outf);
     _lstm_cell.writeModel(outf);
     
     WriteBinary(outf, _left2right);
@@ -540,7 +525,6 @@ public:
   void loadModel(LStream &inf) {
     _lstm_output.loadModel(inf);
     _lstm_input.loadModel(inf);
-    _lstm_forget.loadModel(inf);
     _lstm_cell.loadModel(inf);
 
     ReadBinary(inf, _left2right);
@@ -553,4 +537,4 @@ public:
 
 };
 
-#endif /* SRC_LSTM_H_ */
+#endif /* SRC_LSTM_CHD_H_ */

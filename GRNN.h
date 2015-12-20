@@ -60,8 +60,8 @@ public:
       Tensor<xpu, 2, dtype> ub, Tensor<xpu, 2, dtype> rWL, Tensor<xpu, 2, dtype> rWR, Tensor<xpu, 2, dtype> rb, bool left2right = true) {
     _left2right = left2right;
 
-    _rnn_update.initial(uWL, uWR, ub, true);
-    _rnn_reset.initial(rWL, rWR, rb, true);
+    _rnn_update.initial(uWL, uWR, ub, true, 1);
+    _rnn_reset.initial(rWL, rWR, rb, true, 1);
     _rnn.initial(WL, WR, b, true);
 
     _null = NewTensor<xpu>(Shape2(1, b.size(1)), d_zero);
@@ -186,7 +186,8 @@ public:
   // It is applied only when the sequential inputs are not fixed in advance,
   // which can vary during decoding.
   // We need not provide a backward function, since during backward, inputs will be given.
-  inline void ComputeForwardScoreIncremental(Tensor<xpu, 2, dtype> x, Tensor<xpu, 2, dtype> uy, Tensor<xpu, 2, dtype> cy, Tensor<xpu, 2, dtype> y) {
+  inline void ComputeForwardScoreIncremental(Tensor<xpu, 2, dtype> x, Tensor<xpu, 2, dtype> mry, Tensor<xpu, 2, dtype> ry,
+      Tensor<xpu, 2, dtype> uy, Tensor<xpu, 2, dtype> cy, Tensor<xpu, 2, dtype> y) {
     assert(_left2right);
     _rnn_update.ComputeForwardScore(_null, x, uy);
     _rnn.ComputeForwardScore(_null, x, cy);

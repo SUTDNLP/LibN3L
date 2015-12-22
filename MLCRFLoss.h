@@ -30,8 +30,8 @@ public:
   }
 
   inline void initial(int nLabelSize, int seed = 0) {
-    //dtype bound = sqrt(6.0 / (nLabelSize + nLabelSize + 1));
-    dtype bound = 0.01;
+    dtype bound = sqrt(6.0 / (nLabelSize + nLabelSize + 1));
+    //dtype bound = 0.01;
 
     _tagBigram = NewTensor<xpu>(Shape2(nLabelSize, nLabelSize), d_zero);
     _grad_tagBigram = NewTensor<xpu>(Shape2(nLabelSize, nLabelSize), d_zero);

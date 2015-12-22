@@ -33,8 +33,8 @@ public:
   }
 
   inline void initial(int nISize, int seed = 0) {
-    //dtype bound = sqrt(6.0 / (1 + nISize + 1));
-    dtype bound = 0.01;
+    dtype bound = sqrt(6.0 / (1 + nISize + 1));
+    //dtype bound = 0.01;
 
     _W = NewTensor<xpu>(Shape2(1, nISize), d_zero);
     _gradW = NewTensor<xpu>(Shape2(1, nISize), d_zero);

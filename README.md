@@ -34,8 +34,13 @@ https://github.com/SUTDNLP/OpenTargetedSentiment
 
 Cite:
 ====
-The code of my EMNLP2015 paper:  
-Meishan Zhang; Yue Zhang; Duy Tin Vo. [Neural Networks for Open Domain Targeted Sentiment.](http://www.aclweb.org/anthology/D/D15/D15-1073.pdf) EMNLP2015.  
+@inproceedings{zhang2016libn3l,
+  title={Libn3l: a lightweight package for neural nlp},
+  author={Zhang, Meishan and Yang, Jie and Teng, Zhiyang and Zhang, Yue},
+  booktitle={Proceedings of the Tenth International Conference on Language Resources and Evaluation (LREC'16)},
+  pages={225--229},
+  year={2016}
+}
 
 Updating...
 ====

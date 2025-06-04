@@ -48,3 +48,6 @@ If you use Libn3l for research, please cite our [LREC paper](https://aclantholog
 Updating...
 ====
 * 2015-12-10: support model saving and loading.
+* 2015-10-20: initial version is available at GitHub.
+* 2015-5-31: framework is completed.
+* 2014-12-01: project starts.

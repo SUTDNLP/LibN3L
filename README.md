@@ -34,13 +34,16 @@ https://github.com/SUTDNLP/OpenTargetedSentiment
 
 Cite:
 ====
-@inproceedings{zhang2016libn3l,
-  title={Libn3l: a lightweight package for neural nlp},
-  author={Zhang, Meishan and Yang, Jie and Teng, Zhiyang and Zhang, Yue},
-  booktitle={Proceedings of the Tenth International Conference on Language Resources and Evaluation (LREC'16)},
-  pages={225--229},
-  year={2016}
-}
+If you use Libn3l for research, please cite our [LREC paper](https://aclanthology.org/L16-1034.pdf) as follows:
+
+    @article{zhang2016libn3l,
+   title={Libn3l: a lightweight package for neural nlp},
+   author={Zhang, Meishan and Yang, Jie and Teng, Zhiyang and Zhang, Yue},
+   booktitle={Proceedings of the Tenth International Conference on Language Resources and Evaluation (LREC'16)},
+   pages={225--229},
+   year={2016} 
+    } 
+
 
 Updating...
 ====
